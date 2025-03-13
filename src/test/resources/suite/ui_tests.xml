@@ -1,0 +1,22 @@
+<suite name="tests for chrome" verbose="1">
+    <test name="Create account tests">
+        <classes>
+            <class name="selenide_tests.CreateAccountPageTest"/>
+        </classes>
+    </test>
+    <test name="Login tests">
+        <classes>
+            <class name="selenide_tests.LoginPageTest"/>
+        </classes>
+    </test>
+    <test name="Delete account tests">
+        <classes>
+            <class name="selenide_tests.DeleteAccountPageTest"/>
+        </classes>
+    </test>
+    <test name="Home page test">
+        <classes>
+            <class name="selenide_tests.HomePageTest"/>
+        </classes>
+    </test>
+</suite>
