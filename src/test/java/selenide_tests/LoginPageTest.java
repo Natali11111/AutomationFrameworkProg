@@ -5,6 +5,7 @@ import data_provider.DataProviderClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pages.CreateAccountPage;
+import pages.HomePage;
 import pages.LoginPage;
 import pages.SignUpUsersPage;
 
@@ -14,6 +15,7 @@ public class LoginPageTest extends BaseTest {
     CreateAccountPage createAccountPage;
     SignUpUsersPage signUpUsersPage;
     LoginPage loginPage;
+    HomePage homePage;
     String email = getRandomEmail();
     String password = "";
 
@@ -22,6 +24,8 @@ public class LoginPageTest extends BaseTest {
         createAccountPage = new CreateAccountPage();
         signUpUsersPage = new SignUpUsersPage();
         loginPage = new LoginPage();
+        homePage = new HomePage();
+        homePage.openPage();
     }
 
     @Test(dataProvider = "dataForAllFields", dataProviderClass = DataProviderClass.class)
@@ -33,12 +37,13 @@ public class LoginPageTest extends BaseTest {
         loginPage.verifyLoginFormPresent();
         loginPage.loginToAccount(email, password);
         homePage.verifyThatNewButtonsPresentInNavbar();
-        homePage.clickOnLogoutButton();
+        //homePage.clickOnLogoutButton();
         homePage.verifyThatNewButtonsDisappearedFromNavbar();
     }
 
     @Test
     public void loginToAccountWithNotExistingAccount() {
+        homePage.clickOnSingUpAndLoginButton();
         loginPage.verifyLoginFormPresent();
         loginPage.loginToAccount(getRandomEmail(), getRandomWordWithNumbers());
         loginPage.verifyNotificationPresent();

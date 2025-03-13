@@ -5,6 +5,7 @@ import data_provider.DataProviderClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import pages.CreateAccountPage;
+import pages.HomePage;
 import pages.LoginPage;
 import pages.SignUpUsersPage;
 
@@ -15,12 +16,15 @@ public class CreateAccountPageTest extends BaseTest {
     CreateAccountPage createAccountPage;
     SignUpUsersPage signUpUsersPage;
     LoginPage loginPage;
+    HomePage homePage;
 
     @BeforeTest
     public void before() {
         createAccountPage = new CreateAccountPage();
         signUpUsersPage = new SignUpUsersPage();
         loginPage = new LoginPage();
+        homePage = new HomePage();
+        homePage.openPage();
     }
 
     @Test(dataProvider = "dataForRequiredFields", dataProviderClass = DataProviderClass.class)
