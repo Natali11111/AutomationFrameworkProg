@@ -37,7 +37,7 @@ public class LoginPageTest extends BaseTest {
         loginPage.verifyLoginFormPresent();
         loginPage.loginToAccount(email, password);
         homePage.verifyThatNewButtonsPresentInNavbar();
-        //homePage.clickOnLogoutButton();
+        homePage.clickOnLogoutButton();
         homePage.verifyThatNewButtonsDisappearedFromNavbar();
     }
 
