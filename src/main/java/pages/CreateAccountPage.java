@@ -42,6 +42,7 @@ public class CreateAccountPage extends BasePage {
 
     public void createAccountFillAllFields(CreateAccountForm createAccountForm) {
         passwordField.setValue(createAccountForm.getPasswordField());
+        daysDropDownButton.scrollIntoView(true);
         chooseDayFromDropDown(createAccountForm.getDaysDropDown());
         chooseMonthFromDropDown(createAccountForm.getMonthsDropDown());
         chooseYearFromDropDown(createAccountForm.getYearsDropDown());
