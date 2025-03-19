@@ -8,14 +8,17 @@ import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static constants.Constants.*;
 import static randomaizer.GenerateData.*;
 
 public class ApiTestsForAuthors {
+    SoftAssert softAssert = new SoftAssert();
 
     @Test
     public void createAuthorCheckThatAuthorCreated() {
@@ -29,33 +32,33 @@ public class ApiTestsForAuthors {
         mapWithUserData.put("firstName", randomFirstName);
         mapWithUserData.put("lastName", randomLastName);
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Authors");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS);
         requestSpecification.body(mapWithUserData);
-        requestSpecification.contentType("application/json");
+        requestSpecification.contentType(CONTENT_TYPE);
         Response response = requestSpecification.post();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
         AuthorsDto actualResponse = response.as(AuthorsDto.class);
-        Assert.assertEquals(actualResponse.getId(), randomId);
-        Assert.assertEquals(actualResponse.getIdBook(), randomBookId);
-        Assert.assertEquals(actualResponse.getFirstName(), randomFirstName);
-        Assert.assertEquals(actualResponse.getLastName(), randomLastName);
+        softAssert.assertEquals(actualResponse.getId(), randomId);
+        softAssert.assertEquals(actualResponse.getIdBook(), randomBookId);
+        softAssert.assertEquals(actualResponse.getFirstName(), randomFirstName);
+        softAssert.assertEquals(actualResponse.getLastName(), randomLastName);
     }
 
     @Test
     public void getAuthorByIdCheckThatExpectedAuthorReturned() {
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Authors/28");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS + 28);
         Response response = requestSpecification.get();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
         AuthorsDto actualResponse = response.as(AuthorsDto.class);
-        Assert.assertEquals(actualResponse.getId(), 28);
-        Assert.assertEquals(actualResponse.getIdBook(), 10);
-        Assert.assertEquals(actualResponse.getFirstName(), "First Name 28");
-        Assert.assertEquals(actualResponse.getLastName(), "Last Name 28");
+        softAssert.assertEquals(actualResponse.getId(), 28);
+        softAssert.assertEquals(actualResponse.getIdBook(), 10);
+        softAssert.assertEquals(actualResponse.getFirstName(), "First Name 28");
+        softAssert.assertEquals(actualResponse.getLastName(), "Last Name 28");
     }
 
     @Test
@@ -70,25 +73,25 @@ public class ApiTestsForAuthors {
         mapWithUserData.put("firstName", randomFirstName);
         mapWithUserData.put("lastName", randomLastName);
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Authors/1");
-        requestSpecification.contentType("application/json");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS + 1);
+        requestSpecification.contentType(CONTENT_TYPE);
         requestSpecification.body(mapWithUserData);
         Response response = requestSpecification.put();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
         AuthorsDto actualResponse = response.as(AuthorsDto.class);
-        Assert.assertEquals(actualResponse.getId(), randomId);
-        Assert.assertEquals(actualResponse.getIdBook(), randomBookId);
-        Assert.assertEquals(actualResponse.getFirstName(), randomFirstName);
-        Assert.assertEquals(actualResponse.getLastName(), randomLastName);
+        softAssert.assertEquals(actualResponse.getId(), randomId);
+        softAssert.assertEquals(actualResponse.getIdBook(), randomBookId);
+        softAssert.assertEquals(actualResponse.getFirstName(), randomFirstName);
+        softAssert.assertEquals(actualResponse.getLastName(), randomLastName);
     }
 
     @Test
     public void deleteAuthorCheckThatAuthorDeleted() {
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Authors/4");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS + 4);
         Response response = requestSpecification.delete();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
@@ -97,8 +100,8 @@ public class ApiTestsForAuthors {
     @Test
     public void getAllAuthorsCheckThatResponseIsNotEmpty() {
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Authors");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS);
         Response response = requestSpecification.get();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
@@ -114,10 +117,10 @@ public class ApiTestsForAuthors {
         mapWithUserData.put("firstName", getRandomWord());
         mapWithUserData.put("lastName", getRandomWord());
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Authors");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS);
         requestSpecification.body(mapWithUserData);
-        requestSpecification.contentType("application/json");
+        requestSpecification.contentType(CONTENT_TYPE);
         Response response = requestSpecification.post();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(400);
@@ -131,10 +134,10 @@ public class ApiTestsForAuthors {
         mapWithUserData.put("firstName", getRandomWord());
         mapWithUserData.put("lastName", getRandomWord());
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Authors");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS);
         requestSpecification.body(mapWithUserData);
-        requestSpecification.contentType("application/json");
+        requestSpecification.contentType(CONTENT_TYPE);
         Response response = requestSpecification.post();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(400);
@@ -148,10 +151,10 @@ public class ApiTestsForAuthors {
         mapWithUserData.put("firstName", firstName);
         mapWithUserData.put("lastName", getRandomWord());
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Authors");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS);
         requestSpecification.body(mapWithUserData);
-        requestSpecification.contentType("application/json");
+        requestSpecification.contentType(CONTENT_TYPE);
         Response response = requestSpecification.post();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(400);
@@ -165,10 +168,10 @@ public class ApiTestsForAuthors {
         mapWithUserData.put("firstName", getRandomWord());
         mapWithUserData.put("lastName", lastName);
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Authors");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS);
         requestSpecification.body(mapWithUserData);
-        requestSpecification.contentType("application/json");
+        requestSpecification.contentType(CONTENT_TYPE);
         Response response = requestSpecification.post();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(400);
@@ -182,11 +185,13 @@ public class ApiTestsForAuthors {
         mapWithUserData.put("firstName", getRandomWord());
         mapWithUserData.put("lastName", getRandomWord());
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
+        requestSpecification.baseUri(BASE_URL);
         requestSpecification.basePath(basePath);
         requestSpecification.body(mapWithUserData);
-        requestSpecification.contentType("application/json");
+        requestSpecification.contentType(CONTENT_TYPE);
         Response response = requestSpecification.post();
+        ValidatableResponse validatableResponse = response.then();
+        validatableResponse.statusCode(404);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class,
@@ -198,15 +203,15 @@ public class ApiTestsForAuthors {
         mapWithUserData.put("firstName", getRandomWord());
         mapWithUserData.put("lastName", getRandomWord());
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
+        requestSpecification.baseUri(BASE_URL);
         requestSpecification.basePath(null);
         requestSpecification.body(mapWithUserData);
-        requestSpecification.contentType("application/json");
+        requestSpecification.contentType(CONTENT_TYPE);
         Response response = requestSpecification.post();
     }
 
     @Test(dataProvider = "invalidDataForContentType",
-            expectedExceptions = IllegalArgumentException.class )
+            expectedExceptions = IllegalArgumentException.class)
     public void createAuthorWithWrongContentTypeCheckThatAuthorNotCreated(String contentType) {
         Map<String, Object> mapWithUserData = new HashMap<>();
         mapWithUserData.put("id", getRandomNumber());
@@ -214,8 +219,8 @@ public class ApiTestsForAuthors {
         mapWithUserData.put("firstName", getRandomWord());
         mapWithUserData.put("lastName", getRandomWord());
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Authors");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS);
         requestSpecification.body(mapWithUserData);
         requestSpecification.contentType(contentType);
         Response response = requestSpecification.post();
@@ -229,10 +234,10 @@ public class ApiTestsForAuthors {
         mapWithUserData.put("firstName", getRandomWord());
         mapWithUserData.put("lastName", getRandomWord());
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.net/");
-        requestSpecification.basePath("/api/v1/Authors");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_AUTHORS);
         requestSpecification.body(mapWithUserData);
-        requestSpecification.contentType("application/json");
+        requestSpecification.contentType(CONTENT_TYPE);
         Response response = requestSpecification.post();
     }
 

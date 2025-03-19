@@ -7,14 +7,17 @@ import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static api_tests.test_data.DataForTests.EXPECTEDUSERNAMES;
+import static constants.Constants.*;
 import static randomaizer.GenerateData.*;
 
 public class ApiTestsForUsers {
+    SoftAssert softAssert = new SoftAssert();
 
     @Test
     public void createAccountCheckThatUserExisted() {
@@ -26,31 +29,31 @@ public class ApiTestsForUsers {
         mapWithUserData.put("username", randomUsername);
         mapWithUserData.put("password", randomPassword);
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Users");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_USERS);
         requestSpecification.body(mapWithUserData);
-        requestSpecification.contentType("application/json");
+        requestSpecification.contentType(CONTENT_TYPE);
         Response response = requestSpecification.post();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
         UsersDto actualResponse = response.as(UsersDto.class);
-        Assert.assertEquals(actualResponse.getId(), randomId);
-        Assert.assertEquals(actualResponse.getUserName(), randomUsername);
-        Assert.assertEquals(actualResponse.getPassword(), randomPassword);
+        softAssert.assertEquals(actualResponse.getId(), randomId);
+        softAssert.assertEquals(actualResponse.getUserName(), randomUsername);
+        softAssert.assertEquals(actualResponse.getPassword(), randomPassword);
     }
 
     @Test
     public void getUserByIdCheckThatExpectedUserReturned() {
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Users/1");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_USERS + 1);
         Response response = requestSpecification.get();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
         UsersDto actualResponse = response.as(UsersDto.class);
-        Assert.assertEquals(actualResponse.getId(), 1);
-        Assert.assertEquals(actualResponse.getUserName(), "User 1");
-        Assert.assertEquals(actualResponse.getPassword(), "Password1");
+        softAssert.assertEquals(actualResponse.getId(), 1);
+        softAssert.assertEquals(actualResponse.getUserName(), "User 1");
+        softAssert.assertEquals(actualResponse.getPassword(), "Password1");
     }
 
     @Test
@@ -63,28 +66,27 @@ public class ApiTestsForUsers {
         mapWithUserData.put("username", randomUsername);
         mapWithUserData.put("password", randomPassword);
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Users/1");
-        requestSpecification.contentType("application/json");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_USERS + 1);
+        requestSpecification.contentType(CONTENT_TYPE);
         requestSpecification.body(mapWithUserData);
         Response response = requestSpecification.put();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
         UsersDto actualResponse = response.as(UsersDto.class);
-        Assert.assertEquals(actualResponse.getId(), randomId);
-        Assert.assertEquals(actualResponse.getUserName(), randomUsername);
-        Assert.assertEquals(actualResponse.getPassword(), randomPassword);
+        softAssert.assertEquals(actualResponse.getId(), randomId);
+        softAssert.assertEquals(actualResponse.getUserName(), randomUsername);
+        softAssert.assertEquals(actualResponse.getPassword(), randomPassword);
     }
 
     @Test
     public void deleteAccountCheckThatAccountDeleted() {
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Users/4");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_USERS + 4);
         Response response = requestSpecification.delete();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
-        response.prettyPrint();
     }
 
     @Test
@@ -94,8 +96,8 @@ public class ApiTestsForUsers {
 
     private UsersDto[] getUsersWithAllInfo() {
         RequestSpecification requestSpecification = RestAssured.given();
-        requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
-        requestSpecification.basePath("/api/v1/Users");
+        requestSpecification.baseUri(BASE_URL);
+        requestSpecification.basePath(BASE_PATH_FOR_USERS);
         Response response = requestSpecification.get();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
