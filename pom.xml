@@ -25,6 +25,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.2.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testNg.version}</version>
@@ -85,6 +90,7 @@
                     </systemProperties>
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/suite/ui_tests.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/resources/suite/api_tests.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
                 <dependencies>

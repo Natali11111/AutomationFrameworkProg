@@ -1,6 +1,6 @@
 package restassured_api_tests;
 
-import api_tests.pages.UserDto;
+import api_tests.pages.UsersDto;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
@@ -14,8 +14,7 @@ import java.util.Map;
 import static api_tests.test_data.DataForTests.EXPECTEDUSERNAMES;
 import static randomaizer.GenerateData.*;
 
-public class ApiTestsAzureWebsiteUsers {
-
+public class ApiTestsForUsers {
 
     @Test
     public void createAccountCheckThatUserExisted() {
@@ -34,7 +33,7 @@ public class ApiTestsAzureWebsiteUsers {
         Response response = requestSpecification.post();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
-        UserDto actualResponse = response.as(UserDto.class);
+        UsersDto actualResponse = response.as(UsersDto.class);
         Assert.assertEquals(actualResponse.getId(), randomId);
         Assert.assertEquals(actualResponse.getUserName(), randomUsername);
         Assert.assertEquals(actualResponse.getPassword(), randomPassword);
@@ -48,7 +47,7 @@ public class ApiTestsAzureWebsiteUsers {
         Response response = requestSpecification.get();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
-        UserDto actualResponse = response.as(UserDto.class);
+        UsersDto actualResponse = response.as(UsersDto.class);
         Assert.assertEquals(actualResponse.getId(), 1);
         Assert.assertEquals(actualResponse.getUserName(), "User 1");
         Assert.assertEquals(actualResponse.getPassword(), "Password1");
@@ -71,7 +70,7 @@ public class ApiTestsAzureWebsiteUsers {
         Response response = requestSpecification.put();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
-        UserDto actualResponse = response.as(UserDto.class);
+        UsersDto actualResponse = response.as(UsersDto.class);
         Assert.assertEquals(actualResponse.getId(), randomId);
         Assert.assertEquals(actualResponse.getUserName(), randomUsername);
         Assert.assertEquals(actualResponse.getPassword(), randomPassword);
@@ -93,18 +92,17 @@ public class ApiTestsAzureWebsiteUsers {
         verifyThatAllExpectedUsernamesPresent(EXPECTEDUSERNAMES);
     }
 
-
-    private UserDto[] getUsersWithAllInfo() {
+    private UsersDto[] getUsersWithAllInfo() {
         RequestSpecification requestSpecification = RestAssured.given();
         requestSpecification.baseUri("https://fakerestapi.azurewebsites.net/");
         requestSpecification.basePath("/api/v1/Users");
         Response response = requestSpecification.get();
         ValidatableResponse validatableResponse = response.then();
         validatableResponse.statusCode(200);
-        return response.as(UserDto[].class);
+        return response.as(UsersDto[].class);
     }
 
-    private String[] getUsernames(UserDto[] usersWithAllInfo) {
+    private String[] getUsernames(UsersDto[] usersWithAllInfo) {
         String[] usernames = new String[usersWithAllInfo.length];
         for (int i = 0; i < usersWithAllInfo.length; i++) {
             usernames[i] = usersWithAllInfo[i].getUserName();
@@ -119,6 +117,4 @@ public class ApiTestsAzureWebsiteUsers {
             Assert.assertEquals(actualUsernames[i], expectedUsernames[i]);
         }
     }
-
-
 }
