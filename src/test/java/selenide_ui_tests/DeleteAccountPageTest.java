@@ -1,13 +1,13 @@
-package selenide_tests;
+package selenide_ui_tests;
 
-import builder.CreateAccountForm;
-import data_provider.DataProviderClass;
+import ui_tests.builder.CreateAccountForm;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import pages.CreateAccountPage;
-import pages.DeleteAccountPage;
-import pages.HomePage;
-import pages.SignUpUsersPage;
+import ui_tests.data_provider.DataProviderClass;
+import ui_tests.pages.CreateAccountPage;
+import ui_tests.pages.DeleteAccountPage;
+import ui_tests.pages.HomePage;
+import ui_tests.pages.SignUpUsersPage;
 
 import static randomaizer.GenerateData.getRandomEmail;
 import static randomaizer.GenerateData.getRandomWord;

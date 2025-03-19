@@ -1,6 +1,6 @@
-package data_provider;
+package ui_tests.data_provider;
 
-import builder.CreateAccountBuilder;
+import ui_tests.builder.CreateAccountBuilder;
 import org.testng.annotations.DataProvider;
 
 import static randomaizer.GenerateData.*;

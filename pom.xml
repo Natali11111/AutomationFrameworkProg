@@ -15,10 +15,12 @@
         <selenide.version>7.7.3</selenide.version>
         <lombok.version>1.18.36</lombok.version>
         <allure_testNg.version>2.29.1</allure_testNg.version>
-        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons_lang3.version>3.17.0</commons_lang3.version>
         <maven_surefire.version>3.5.2</maven_surefire.version>
         <allure_maven.version>2.15.2</allure_maven.version>
         <allure_selenide.version>2.23.0</allure_selenide.version>
+        <rest_assured.version>5.5.1</rest_assured.version>
+        <jackson_databind.version>2.18.2</jackson_databind.version>
     </properties>
 
     <dependencies>
@@ -40,12 +42,22 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
+            <version>${commons_lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
             <version>${allure_testNg.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest_assured.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson_databind.version}</version>
         </dependency>
     </dependencies>
 

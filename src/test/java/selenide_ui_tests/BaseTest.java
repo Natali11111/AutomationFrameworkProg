@@ -1,4 +1,4 @@
-package selenide_tests;
+package selenide_ui_tests;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;

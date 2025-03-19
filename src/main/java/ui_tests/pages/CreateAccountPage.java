@@ -1,12 +1,11 @@
-package pages;
+package ui_tests.pages;
 
-import builder.CreateAccountForm;
+import ui_tests.builder.CreateAccountForm;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Data;
 import org.openqa.selenium.By;
 
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;

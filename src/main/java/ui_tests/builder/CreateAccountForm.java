@@ -1,4 +1,4 @@
-package builder;
+package ui_tests.builder;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package builder;
+package ui_tests.builder;
 
 public class CreateAccountBuilder {
     private String titleRadioButtons;
