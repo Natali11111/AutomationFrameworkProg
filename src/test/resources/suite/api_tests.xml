@@ -1,12 +1,12 @@
-<!--<suite name="api tests" verbose="1">-->
-<!--    <test name="Tests for users">-->
-<!--        <classes>-->
-<!--            <class name="restassured_api_tests.ApiTestsForUsers"/>-->
-<!--        </classes>-->
-<!--    </test>-->
-<!--    <test name="Tests for authors">-->
-<!--        <classes>-->
-<!--            <class name="restassured_api_tests.ApiTestsForAuthors"/>-->
-<!--        </classes>-->
-<!--    </test>-->
-<!--</suite>-->
+<suite name="api tests" verbose="1">
+    <test name="Tests for users">
+        <classes>
+            <class name="restassured_api_tests.ApiTestsForUsers"/>
+        </classes>
+    </test>
+    <test name="Tests for authors">
+        <classes>
+            <class name="restassured_api_tests.ApiTestsForAuthors"/>
+        </classes>
+    </test>
+</suite>
