@@ -13,7 +13,7 @@ import ui_tests.pages.SignUpUsersPage;
 import static randomaizer.GenerateData.getRandomEmail;
 import static randomaizer.GenerateData.getRandomWord;
 
-public class CreateAccountPageTest extends BaseTest {
+public class CreateAccountPageTest extends BaseTestForRemoteDriver {
     CreateAccountPage createAccountPage;
     SignUpUsersPage signUpUsersPage;
     LoginPage loginPage;

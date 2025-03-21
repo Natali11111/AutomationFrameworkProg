@@ -11,7 +11,7 @@ import ui_tests.pages.SignUpUsersPage;
 
 import static randomaizer.GenerateData.*;
 
-public class LoginPageTest extends BaseTest {
+public class LoginPageTest extends BaseTestForRemoteDriver {
     CreateAccountPage createAccountPage;
     SignUpUsersPage signUpUsersPage;
     LoginPage loginPage;

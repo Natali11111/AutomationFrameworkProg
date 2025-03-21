@@ -4,7 +4,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 import ui_tests.pages.HomePage;
 
-public class HomePageTest {
+public class HomePageTest extends BaseTestForRemoteDriver {
     HomePage homePage;
 
 

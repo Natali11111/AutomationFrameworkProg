@@ -8,19 +8,6 @@ import java.util.HashMap;
 
 public class BaseTestForRemoteDriver {
 
-//    @BeforeMethod
-//    public void setUp() {
-//        Configuration.remote = "http://localhost:4444/wd/hub";
-//        Configuration.browser = "chrome";
-//        Configuration.browserVersion = "128.0";
-//        Configuration.browserSize = "1920x1080";
-//
-//        ChromeOptions options = new ChromeOptions();
-//        options.setCapability("enableVNC", true);  // Включить VNC для дебага
-//        options.setCapability("enableVideo", false); // Видео выключено
-//        Configuration.browserCapabilities = options;
-//    }
-
     @BeforeMethod
     public void setup() {
         Configuration.remote = "http://localhost:4444/wd/hub";
