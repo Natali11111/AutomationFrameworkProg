@@ -25,4 +25,5 @@
     <classes>
         <class name="selenide_ui_tests.TestRemoteDriver"/>
     </classes>
+    </test>
 </suite>
