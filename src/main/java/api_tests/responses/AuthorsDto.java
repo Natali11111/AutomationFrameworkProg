@@ -1,11 +1,11 @@
-package api_tests.pages;
+package api_tests.responses;
 
 import lombok.Data;
 
 @Data
 public class AuthorsDto {
-    private int id;
-    private int idBook;
+    private Integer id;
+    private Integer idBook;
     private String firstName;
     private String lastName;
 }

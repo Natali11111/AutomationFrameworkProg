@@ -29,6 +29,7 @@ public class DataProviderClass {
                 }
         };
     }
+
     @DataProvider(name = "dataForRequiredFields")
     public static Object[][] dataForRequiredFields() {
         return new Object[][]{

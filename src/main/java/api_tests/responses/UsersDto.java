@@ -1,10 +1,10 @@
-package api_tests.pages;
+package api_tests.responses;
 
 import lombok.Data;
 
 @Data
 public class UsersDto {
-    private int id;
+    private Integer id;
     private String userName;
     private String password;
 
