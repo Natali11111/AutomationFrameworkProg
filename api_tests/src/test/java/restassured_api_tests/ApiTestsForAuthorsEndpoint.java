@@ -7,6 +7,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import responses_dto.AuthorsDto;
+import test_data.DataProviderClass;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
@@ -14,7 +15,7 @@ import static org.hamcrest.Matchers.lessThan;
 import static utils.GenerateData.getRandomNumber;
 import static utils.GenerateData.getRandomWord;
 
-public class ApiTestsForAuthors {
+public class ApiTestsForAuthorsEndpoint {
     SoftAssert softAssert = new SoftAssert();
     AuthorEndpoint authorEndpoint = new AuthorEndpoint();
 
@@ -39,12 +40,9 @@ public class ApiTestsForAuthors {
     @Test
     public void createTwoAuthorWithIdenticalIdVerifyThatItIsImpossible() {
         Integer randomId = getRandomNumber();
-        Integer randomBookId = getRandomNumber();
-        String randomFirstName = getRandomWord();
-        String randomLastName = getRandomWord();
         BodyForAuthorEndpoint bodyForCreatingAuthor = new BodyForAuthorEndpoint();
-        bodyForCreatingAuthor.setId(randomId).setBookId(randomBookId)
-                .setFirstName(randomFirstName).setLastName(randomLastName);
+        bodyForCreatingAuthor.setId(randomId).setBookId(getRandomNumber())
+                .setFirstName(getRandomWord()).setLastName(getRandomWord());
         Response successfulResponse = authorEndpoint.createAuthor(bodyForCreatingAuthor);
         successfulResponse.then().statusCode(200).time(lessThan(2000L));
         Response failedResponse = authorEndpoint.createAuthor(bodyForCreatingAuthor);
@@ -53,7 +51,7 @@ public class ApiTestsForAuthors {
         authorEndpoint.deleteAuthor(randomId);
     }
 
-    @Test(dataProvider = "invalidDataForBody")
+    @Test(dataProvider = "invalidDataForBodyAuthorsEndpointPost", dataProviderClass = DataProviderClass.class)
     public void negativeTestCreateAuthorWithInvalidBody(Integer id, Integer bookId, String firstName,
                                                         String lastName, String errorMessage) {
         BodyForAuthorEndpoint bodyForCreatingAuthor = new BodyForAuthorEndpoint();
@@ -71,39 +69,43 @@ public class ApiTestsForAuthors {
         String randomFirstName = getRandomWord();
         String randomLastName = getRandomWord();
         String updatedFirstName = getRandomWord();
+        String updatedLastName = getRandomWord();
         BodyForAuthorEndpoint bodyForAuthor = new BodyForAuthorEndpoint();
-        bodyForAuthor.setId(randomId).setBookId(randomBookId)
+        bodyForAuthor.setId(randomId).setBookId(getRandomNumber())
                 .setFirstName(randomFirstName).setLastName(randomLastName);
         authorEndpoint.createAuthor(bodyForAuthor);
-        bodyForAuthor.setFirstName(updatedFirstName);
+        bodyForAuthor.setFirstName(updatedFirstName).setLastName(updatedLastName);
         Response response = authorEndpoint.updateAuthor(bodyForAuthor, randomId);
         response.then().statusCode(200).time(lessThan(2000L))
                 .body(matchesJsonSchemaInClasspath("shemas/author_shema.json"));
-        getAuthorByIdCheckValueOfFields(randomId, randomBookId, updatedFirstName, randomLastName);
+        getAuthorByIdCheckValueOfFields(randomId, randomBookId, updatedFirstName, updatedLastName);
         authorEndpoint.deleteAuthor(randomId);
     }
 
     @Test(dataProvider = "invalidDataForBody")
-    public void negativeTestUpdateAuthorDataWithInvalidBody(Integer id, Integer bookId,
+    public void negativeTestUpdateAuthorDataWithInvalidBody(Integer bookId,
                                                             String firstName, String lastName,
                                                             String errorMessage) {
-        BodyForAuthorEndpoint bodyForAuthor = new BodyForAuthorEndpoint();
-        bodyForAuthor.setId(id).setBookId(bookId)
+        Integer randomId = getRandomNumber();
+        BodyForAuthorEndpoint bodyForAuthorPost = new BodyForAuthorEndpoint();
+        bodyForAuthorPost.setId(randomId).setBookId(bookId)
                 .setFirstName(firstName).setLastName(lastName);
-        Response response = authorEndpoint.updateAuthor(bodyForAuthor, id);
+        authorEndpoint.createAuthor(bodyForAuthorPost);
+        BodyForAuthorEndpoint bodyForAuthorPut = new BodyForAuthorEndpoint();
+        bodyForAuthorPut.setId(randomId).setBookId(bookId)
+                .setFirstName(firstName).setLastName(lastName);
+        Response response = authorEndpoint.updateAuthor(bodyForAuthorPut, randomId);
         response.then().statusCode(404).body("error", equalTo(errorMessage))
                 .time(lessThan(2000L));
+        authorEndpoint.deleteAuthor(randomId);
     }
 
     @Test
     public void deleteAuthorCheckThatAuthorDeleted() {
         Integer randomId = getRandomNumber();
-        Integer randomBookId = getRandomNumber();
-        String randomFirstName = getRandomWord();
-        String randomLastName = getRandomWord();
         BodyForAuthorEndpoint bodyForCreatingAuthor = new BodyForAuthorEndpoint();
-        bodyForCreatingAuthor.setId(randomId).setBookId(randomBookId)
-                .setFirstName(randomFirstName).setLastName(randomLastName);
+        bodyForCreatingAuthor.setId(randomId).setBookId(getRandomNumber())
+                .setFirstName(getRandomWord()).setLastName(getRandomWord());
         authorEndpoint.createAuthor(bodyForCreatingAuthor);
         Response deleteResponse = authorEndpoint.deleteAuthor(randomId);
         deleteResponse.then().statusCode(200).time(lessThan(2000L));
@@ -115,20 +117,14 @@ public class ApiTestsForAuthors {
     @Test
     public void getAllAuthorsCheckThatResponseIsNotEmpty() {
         Integer randomId = getRandomNumber();
-        Integer randomBookId = getRandomNumber();
-        String randomFirstName = getRandomWord();
-        String randomLastName = getRandomWord();
         BodyForAuthorEndpoint bodyForCreatingAuthor = new BodyForAuthorEndpoint();
-        bodyForCreatingAuthor.setId(randomId).setBookId(randomBookId)
-                .setFirstName(randomFirstName).setLastName(randomLastName);
+        bodyForCreatingAuthor.setId(randomId).setBookId(getRandomNumber())
+                .setFirstName(getRandomWord()).setLastName(getRandomWord());
         authorEndpoint.createAuthor(bodyForCreatingAuthor);
         Integer randomIdForSecondAuthor = getRandomNumber();
-        Integer randomBookIdForSecondAuthor = getRandomNumber();
-        String randomFirstNameForSecondAuthor = getRandomWord();
-        String randomLastNameForSecondAuthor = getRandomWord();
         BodyForAuthorEndpoint bodyForCreatingSecondAuthor = new BodyForAuthorEndpoint();
-        bodyForCreatingSecondAuthor.setId(randomIdForSecondAuthor).setBookId(randomBookIdForSecondAuthor)
-                .setFirstName(randomFirstNameForSecondAuthor).setLastName(randomLastNameForSecondAuthor);
+        bodyForCreatingSecondAuthor.setId(randomIdForSecondAuthor).setBookId(getRandomNumber())
+                .setFirstName(getRandomWord()).setLastName(getRandomWord());
         authorEndpoint.createAuthor(bodyForCreatingSecondAuthor);
         Response response = authorEndpoint.getAuthors();
         response.then().statusCode(200).time(lessThan(2000L))

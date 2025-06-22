@@ -1,12 +1,12 @@
 <suite name="api tests" verbose="1">
     <test name="Tests for users">
         <classes>
-            <class name="restassured_api_tests.ApiTestsForUsers"/>
+            <class name="restassured_api_tests.ApiTestsForUsersEndpoint"/>
         </classes>
     </test>
     <test name="Tests for authors">
         <classes>
-            <class name="restassured_api_tests.ApiTestsForAuthors"/>
+            <class name="restassured_api_tests.ApiTestsForAuthorsEndpoint"/>
         </classes>
     </test>
 </suite>

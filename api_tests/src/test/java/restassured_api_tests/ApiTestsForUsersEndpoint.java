@@ -1,27 +1,26 @@
 package restassured_api_tests;
 
-
 import bodies_dto.BodyForUserEndpoint;
 import endpoints.UserEndpoint;
 import io.restassured.response.Response;
 import org.testng.Assert;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import responses_dto.UsersDto;
+import test_data.DataProviderClass;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.lessThan;
 import static utils.GenerateData.*;
 
-public class ApiTestsForUsers {
+public class ApiTestsForUsersEndpoint {
     SoftAssert softAssert = new SoftAssert();
     UserEndpoint userEndpoint = new UserEndpoint();
-    Integer randomId = getRandomNumber();
 
     @Test
     public void createAccountCheckThatUserExisted() {
+        Integer randomId = getRandomNumber();
         String randomUsername = getRandomWord();
         String randomPassword = getRandomWordWithNumbers();
         BodyForUserEndpoint bodyForUser = new BodyForUserEndpoint();
@@ -30,28 +29,26 @@ public class ApiTestsForUsers {
         postResponse.then().statusCode(200).time(lessThan(2000L))
                 .body(matchesJsonSchemaInClasspath("shemas/user_shema.json"));
         getUserByIdAndVerifyValueOfFields(randomId, randomUsername, randomPassword);
+        userEndpoint.deleteUser(randomId);
     }
 
     @Test
     public void createTwoAccountsWithIdenticalIdVerifyThatItIsImpossible() {
         Integer randomId = getRandomNumber();
-        String randomUserName = getRandomWord();
-        String randomPassword = getRandomWordWithNumbers();
         BodyForUserEndpoint bodyForUser = new BodyForUserEndpoint();
-        bodyForUser.setId(randomId).setUserName(randomUserName)
-                .setPassword(randomPassword);
+        bodyForUser.setId(randomId).setUserName(getRandomWord())
+                .setPassword(getRandomWordWithNumbers());
         Response successfulResponse = userEndpoint.createUser(bodyForUser);
-        successfulResponse.then().statusCode(200).time(lessThan(2000L))
-                .header("Content-Type", "application/json; charset=utf-8; v=1.0");
+        successfulResponse.then().statusCode(200).time(lessThan(2000L));
         Response failedResponse = userEndpoint.createUser(bodyForUser);
         failedResponse.then()
                 .statusCode(400)
-                .header("Content-Type", "application/json; charset=utf-8; v=1.0")
                 .body("error", equalTo("The id is already exist"))
                 .time(lessThan(2000L));
+        userEndpoint.deleteUser(randomId);
     }
 
-    @Test(dataProvider = "invalidDataForBody")
+    @Test(dataProvider = "invalidDataForBodyUsersEndpointPost", dataProviderClass = DataProviderClass.class)
     public void negativeTestCreateAccountWithInvalidBody(Integer id, String userName,
                                                          String password, String errorMessage) {
         BodyForUserEndpoint bodyForUser = new BodyForUserEndpoint();
@@ -60,128 +57,114 @@ public class ApiTestsForUsers {
         response.then()
                 .statusCode(400)
                 .time(lessThan(2000L))
-                .header("Content-Type", "application/json; charset=utf-8; v=1.0")
                 .body("error", equalTo(errorMessage));
     }
 
-//    @Test
-//    public void getUserByIdCheckThatExpectedUserReturned() {
-//        RequestSpecification requestSpecification = RestAssured.given();
-//        requestSpecification.baseUri(BASE_URL);
-//        requestSpecification.basePath(BASE_PATH_FOR_USERS + 1);
-//        Response response = requestSpecification.get();
-//        ValidatableResponse validatableResponse = response.then();
-//        validatableResponse.statusCode(200);
-//        UsersDto actualResponse = response.as(UsersDto.class);
-//        softAssert.assertEquals(actualResponse.getId(), 1);
-//        softAssert.assertEquals(actualResponse.getUserName(), "User 1");
-//        softAssert.assertEquals(actualResponse.getPassword(), "Password1");
-//    }
-
     @Test
     public void updateAccountCheckThatUserDataUpdated() {
-        Integer newRandomId = getRandomNumber();
+        Integer randomId = getRandomNumber();
         String randomUsername = getRandomWord();
         String randomPassword = getRandomWordWithNumbers();
+        String updatedUsername = getRandomWord();
+        String updatedPassword = getRandomWordWithNumbers();
         BodyForUserEndpoint bodyForUser = new BodyForUserEndpoint();
-        bodyForUser.setId(newRandomId).setUserName(randomUsername).setPassword(randomPassword);
+        bodyForUser.setId(randomId).setUserName(randomUsername).setPassword(randomPassword);
+        userEndpoint.createUser(bodyForUser);
+        bodyForUser.setUserName(updatedUsername);
+        bodyForUser.setPassword(updatedPassword);
         Response response = userEndpoint.updateUser(bodyForUser, randomId);
         response.then()
                 .statusCode(200)
                 .time(lessThan(2000L))
-                .header("Content-Type", "application/json; charset=utf-8; v=1.0")
-                .body(matchesJsonSchemaInClasspath("shemas/user_shema.json"));;
-        UsersDto actualResponse = response.as(UsersDto.class);
-        verifyValuesFromBody(actualResponse, newRandomId, randomUsername, randomPassword);
-        getUserByIdAndVerifyValueOfFields(newRandomId, randomUsername, randomPassword);
+                .body(matchesJsonSchemaInClasspath("shemas/user_shema.json"));
+        getUserByIdAndVerifyValueOfFields(randomId, updatedUsername, updatedPassword);
+        userEndpoint.deleteUser(randomId);
     }
 
-    @Test(dataProvider = "invalidDataForBody")
-    public void negativeTestUpdateAccountDataWithInvalidBody(Integer id,
-                                                             String userName, String password,
+    @Test(dataProvider = "invalidDataForBodyUsersEndpointPut", dataProviderClass = DataProviderClass.class)
+    public void negativeTestUpdateAccountDataWithInvalidBody(String userName, String password,
                                                              String errorMessage) {
-        BodyForUserEndpoint bodyForUser = new BodyForUserEndpoint();
-        bodyForUser.setId(id).setUserName(userName).setPassword(password);
-        Response response = userEndpoint.updateUser(bodyForUser, randomId);
+        Integer randomId = getRandomNumber();
+        BodyForUserEndpoint bodyForUserPost = new BodyForUserEndpoint();
+        bodyForUserPost.setId(randomId).setUserName(getRandomWord()).setPassword(getRandomWord());
+        userEndpoint.createUser(bodyForUserPost);
+        BodyForUserEndpoint bodyForUserPut = new BodyForUserEndpoint();
+        bodyForUserPut.setId(randomId).setUserName(userName).setPassword(password);
+        Response response = userEndpoint.updateUser(bodyForUserPut, randomId);
         response.then()
                 .statusCode(404)
                 .time(lessThan(2000L))
-                .header("Content-Type", "application/json; charset=utf-8; v=1.0")
                 .body("error", equalTo(errorMessage));
+        userEndpoint.deleteUser(randomId);
     }
 
     @Test
     public void deleteAccountCheckThatAccountDeleted() {
+        Integer randomId = getRandomNumber();
+        BodyForUserEndpoint bodyForUser = new BodyForUserEndpoint();
+        bodyForUser.setId(randomId).setUserName(getRandomWord()).setPassword(getRandomWordWithNumbers());
+        userEndpoint.createUser(bodyForUser);
         Response deleteResponse = userEndpoint.deleteUser(randomId);
         deleteResponse.then()
                 .statusCode(200)
-                .time(lessThan(2000L))
-                .header("Content-Type", "application/json; charset=utf-8; v=1.0");
+                .time(lessThan(2000L));
         Response getResponse = userEndpoint.getUser(randomId);
         getResponse.then()
                 .statusCode(402)
                 .time(lessThan(2000L))
-                .header("Content-Type", "application/json; charset=utf-8; v=1.0")
                 .body("error", equalTo("The account doesn't exist"));
     }
 
     @Test
     public void negativeTestDeleteDeletedAccount() {
-        Response response = userEndpoint.deleteUser(randomId);
-        response.then()
+        Integer randomId = getRandomNumber();
+        BodyForUserEndpoint bodyForUser = new BodyForUserEndpoint();
+        bodyForUser.setId(randomId).setUserName(getRandomWord()).setPassword(getRandomWordWithNumbers());
+        userEndpoint.createUser(bodyForUser);
+        Response deleteAccountSuccess = userEndpoint.deleteUser(randomId);
+        deleteAccountSuccess.then()
+                .statusCode(200)
+                .time(lessThan(2000L));
+        Response deleteAccountFailed = userEndpoint.deleteUser(randomId);
+        deleteAccountFailed.then()
+                .statusCode(405)
+                .time(lessThan(2000L));
+        Response responseGet = userEndpoint.getUser(randomId);
+        responseGet.then()
                 .statusCode(405)
                 .time(lessThan(2000L))
-                .header("Content-Type", "application/json; charset=utf-8; v=1.0")
                 .body("error", equalTo("The account doesn't exist"));
     }
 
-    @Test(dataProvider = "invalidId")
+    @Test(dataProvider = "invalidId", dataProviderClass = DataProviderClass.class)
     public void negativeTestDeleteAccountWithInvalidId(Integer id, String errorMessage) {
         Response response = userEndpoint.deleteUser(id);
         response.then()
                 .statusCode(415)
                 .time(lessThan(2000L))
-                .header("Content-Type", "application/json; charset=utf-8; v=1.0")
                 .body("error", equalTo(errorMessage));
     }
 
     @Test
     public void getAllUsersAndCheckThatResponseNotEmpty() {
+        Integer randomIdOne = getRandomNumber();
+        BodyForUserEndpoint bodyForFirstUser = new BodyForUserEndpoint();
+        bodyForFirstUser.setId(randomIdOne).setUserName(getRandomWord()).setPassword(getRandomWord());
+        userEndpoint.createUser(bodyForFirstUser);
+        Integer randomIdTwo = getRandomNumber();
+        BodyForUserEndpoint bodyForSecondUser = new BodyForUserEndpoint();
+        bodyForSecondUser.setId(randomIdTwo).setUserName(getRandomWord()).setPassword(getRandomWord());
+        userEndpoint.createUser(bodyForSecondUser);
         Response response = userEndpoint.getUsers();
         response.then()
                 .statusCode(200)
                 .time(lessThan(2000L))
-                .header("Content-Type", "application/json; charset=utf-8; v=1.0")
-                .body(matchesJsonSchemaInClasspath("shemas/user_shema.json"));;
+                .body(matchesJsonSchemaInClasspath("shemas/user_shema.json"));
         UsersDto[] actualResponse = response.as(UsersDto[].class);
         Assert.assertNotEquals(actualResponse.length, 0);
+        userEndpoint.deleteUser(randomIdOne);
+        userEndpoint.deleteUser(randomIdTwo);
     }
-
-//    private UsersDto[] getUsersWithAllInfo() {
-//        RequestSpecification requestSpecification = RestAssured.given();
-//        requestSpecification.baseUri(BASE_URL);
-//        requestSpecification.basePath(BASE_PATH_FOR_USERS);
-//        Response response = requestSpecification.get();
-//        ValidatableResponse validatableResponse = response.then();
-//        validatableResponse.statusCode(200);
-//        return response.as(UsersDto[].class);
-//    }
-//
-//    private String[] getUsernames(UsersDto[] usersWithAllInfo) {
-//        String[] usernames = new String[usersWithAllInfo.length];
-//        for (int i = 0; i < usersWithAllInfo.length; i++) {
-//            usernames[i] = usersWithAllInfo[i].getUserName();
-//        }
-//        return usernames;
-//    }
-//
-//    private void verifyThatAllExpectedUsernamesPresent(String[] expectedUsernames) {
-//        String[] actualUsernames = getUsernames(getUsersWithAllInfo());
-//        Assert.assertEquals(actualUsernames.length, expectedUsernames.length);
-//        for (int i = 0; i < actualUsernames.length; i++) {
-//            Assert.assertEquals(actualUsernames[i], expectedUsernames[i]);
-//        }
-//    }
 
     private void getUserByIdAndVerifyValueOfFields(Integer id, String username, String
             password) {
@@ -191,12 +174,5 @@ public class ApiTestsForUsers {
         softAssert.assertEquals(actualGetResponse.getId(), id);
         softAssert.assertEquals(actualGetResponse.getUserName(), username);
         softAssert.assertEquals(actualGetResponse.getPassword(), password);
-    }
-
-    public void verifyValuesFromBody(UsersDto actualResponse, Integer id,
-                                     String userName, String password) {
-        softAssert.assertEquals(actualResponse.getId(), id);
-        softAssert.assertEquals(actualResponse.getUserName(), userName);
-        softAssert.assertEquals(actualResponse.getPassword(), password);
     }
 }
